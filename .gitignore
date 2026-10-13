@@ -1,0 +1,21 @@
+# Python caches
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Environments
+.env
+.venv
+
+# Satellite NetCDF files (prevent pushing huge binaries)
+*.nc
+*.nc4
+*.tif
+*.tiff
+data/raw/*
+data/processed/*
+
+# Keep folder structure tracked
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/vectors/.gitkeep
