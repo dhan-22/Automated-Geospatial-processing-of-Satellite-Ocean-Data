@@ -6,6 +6,7 @@ __pycache__/
 # Environments
 .env
 .venv
+.vscode/
 
 # Satellite NetCDF files (prevent pushing huge binaries)
 *.nc
