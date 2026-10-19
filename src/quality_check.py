@@ -1,10 +1,15 @@
 import numpy as np
+import xarray as xr
 
 
 def inspect_dataset(da):
     """Inspect satellite ocean data."""
+    assert da is not None, "Dataset cannot be None"
+    assert isinstance(da, xr.DataArray), "Input must be an xarray DataArray"
+    assert da.size > 0, "Input array cannot be empty"
 
     values = np.asarray(da.values)
+    assert np.issubdtype(values.dtype, np.number), "Array must contain numeric values"
 
     report = {
         "variable": da.name,
@@ -12,6 +17,7 @@ def inspect_dataset(da):
         "units": da.attrs.get("units", "Unknown"),
         "missing_values": int(np.isnan(values).sum()),
         "infinite_values": int(np.isinf(values).sum()),
+        "valid_values": int(np.isfinite(values).sum()),
     }
 
     valid_values = values[np.isfinite(values)]
@@ -21,6 +27,7 @@ def inspect_dataset(da):
     ]
 
     report["suspicious_values"] = int(suspicious_values.size)
+    assert report["suspicious_values"] <= valid_values.size
     if valid_values.size > 0:
         report["minimum"] = float(valid_values.min())
         report["maximum"] = float(valid_values.max())
@@ -45,5 +52,4 @@ if __name__ == "__main__":
         name="sst",
         attrs={"units": "°C"}
     )
-
     inspect_dataset(sample_data)
