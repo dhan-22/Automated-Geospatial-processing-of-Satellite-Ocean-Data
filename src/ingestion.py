@@ -4,15 +4,15 @@ import os
 import xarray as xr
 import copernicusmarine
 
-def download_sample_data(output_dir="data/raw/", filename="sample_sst.nc"):
+def download_ocean_data(dataset_id: str, variable: str, output_dir="data/raw/", filename="sample.nc"):
     """
-    Downloads a sample subset for the Bay of Bengal using copernicusmarine.
+    Generic helper to download any dataset subset (SST, SSS, or Surface Wind) from Copernicus Marine.
     """
     os.makedirs(output_dir, exist_ok=True)
-    print("Downloading dataset from Copernicus Marine...")
+    print(f"Downloading {variable} dataset from Copernicus Marine...")
     copernicusmarine.subset(
-        dataset_id="cmems_obs-sst_glo_phy_nrt_l4_P1D-m",
-        variable="analysed_sst",
+        dataset_id=dataset_id,
+        variable=variable,
         minimum_longitude=80.0,
         maximum_longitude=95.0,
         minimum_latitude=5.0,
@@ -28,6 +28,9 @@ def load_ocean_dataset(file_path: str, variable_name: str) -> xr.DataArray:
     """
     Loads a NetCDF (.nc) file using xarray and extracts the specified variable array.
     """
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"File not found at path: {file_path}")
+        
     ds = xr.open_dataset(file_path, engine="netcdf4")
     if variable_name not in ds:
         raise KeyError(f"Variable '{variable_name}' not found in dataset. Available: {list(ds.data_vars)}")
@@ -38,7 +41,6 @@ def slice_bay_of_bengal(da: xr.DataArray, min_lat: float = 5.0, max_lat: float =
     Slices the DataArray to the Bay of Bengal boundaries and handles 
     whether latitude order is ascending or descending.
     """
-    # Detect latitude coordinate and dimension names
     lat_dim = 'lat' if 'lat' in da.dims else 'latitude'
     lon_dim = 'lon' if 'lon' in da.dims else 'longitude'
     lat_vals = da[lat_dim].values
