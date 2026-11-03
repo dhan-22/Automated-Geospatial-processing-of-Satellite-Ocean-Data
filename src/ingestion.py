@@ -34,4 +34,5 @@ def slice_bay_of_bengal(
     # Extract the subset
     sliced_da = da.sel({lat_name: lat_slice, lon_name: lon_slice})
 
+    # Return the sliced DataArray
     return sliced_da
