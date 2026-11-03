@@ -36,27 +36,4 @@ def load_ocean_dataset(file_path: str, variable_name: str) -> xr.DataArray:
         raise KeyError(f"Variable '{variable_name}' not found in dataset. Available: {list(ds.data_vars)}")
     return ds[variable_name]
 
-def slice_bay_of_bengal(da: xr.DataArray, min_lat: float = 5.0, max_lat: float = 25.0, min_lon: float = 80.0, max_lon: float = 95.0) -> xr.DataArray:
-    """
-    Slices the DataArray to the Bay of Bengal boundaries and handles 
-    whether latitude order is ascending or descending.
-    """
-    lat_dim = 'lat' if 'lat' in da.dims else 'latitude'
-    lon_dim = 'lon' if 'lon' in da.dims else 'longitude'
-    lat_vals = da[lat_dim].values
-    
-    is_descending = lat_vals[0] > lat_vals[-1]
-    
-    if is_descending:
-        sliced_da = da.sel({
-            lat_dim: slice(max_lat, min_lat),
-            lon_dim: slice(min_lon, max_lon)
-        })
-    else:
-        sliced_da = da.sel({
-            lat_dim: slice(min_lat, max_lat),
-            lon_dim: slice(min_lon, max_lon)
-        })
-        
-    print(f"Successfully sliced data. New shape: {sliced_da.shape}")
     return sliced_da
