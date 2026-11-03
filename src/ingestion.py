@@ -1,4 +1,5 @@
 import xarray as xr
+import os
 
 def load_ocean_dataset(file_path: str, variable_name: str) -> xr.DataArray:
     """
