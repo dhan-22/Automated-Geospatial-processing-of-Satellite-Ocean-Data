@@ -20,3 +20,12 @@ data/processed/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 !data/vectors/.gitkeep
+
+#Ignore entire sandbox or scratch folders
+sandbox/
+scratch/
+
+# Or ignore specific personal notebook naming conventions
+*sandbox*
+*scratch*
+test_*.py
