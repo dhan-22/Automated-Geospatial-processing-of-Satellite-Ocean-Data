@@ -11,6 +11,6 @@ def load_ocean_dataset(file_path: str, variable_name: str) -> xr.DataArray:
         raise FileNotFoundError(f"File not found at path: {file_path}")
         
     ds = xr.open_dataset(file_path, engine="netcdf4")
-    if variable_name not in ds:        
+    if variable_name not in ds:
         raise KeyError(f"Variable '{variable_name}' not found in dataset. Available: {list(ds.data_vars)}")
     return ds[variable_name]
