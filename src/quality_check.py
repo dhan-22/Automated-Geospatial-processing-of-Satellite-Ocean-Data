@@ -21,30 +21,38 @@ def inspect_dataset(da):
     }
 
     valid_values = values[np.isfinite(values)]
+    if da.name == "thetao":
+         lower_limit, upper_limit = -2.5, 40
+    elif da.name == "so":
+         lower_limit, upper_limit = 0, 42
+    elif da.name in ("u", "v"):
+         lower_limit, upper_limit = -100, 100
+    elif da.name == "w":
+         lower_limit, upper_limit = 0, 140
+    else:
+         lower_limit, upper_limit = -2, 40
 
-    suspicious_values = valid_values[
-        (valid_values < -2) | (valid_values > 40)
+    suspicious_values = valid_values[  
+    (valid_values < lower_limit) | (valid_values > upper_limit)
     ]
 
+        
     report["suspicious_values"] = int(suspicious_values.size)
     assert report["suspicious_values"] <= valid_values.size
     if valid_values.size > 0:
-        report["minimum"] = float(valid_values.min())
-        report["maximum"] = float(valid_values.max())
+            report["minimum"] = float(valid_values.min())
+            report["maximum"] = float(valid_values.max())
     else:
-        report["minimum"] = None
-        report["maximum"] = None
+            report["minimum"] = None
+            report["maximum"] = None
 
-    print("\n--- DATA QUALITY REPORT ---")
+    print("\n--- DATA QUALITY REPORT ---") 
 
-    for key, value in report.items():
-        print(f"{key}: {value}")
-
+    for key, value in report.items(): 
+            print(f"{key}: {value}")
     return report
 if __name__ == "__main__":
-    import xarray as xr
-
-    sample_data = xr.DataArray(
+ sample_data = xr.DataArray(
         [[28.5, 29.1, 30.0],
          [27.8, float("nan"), 29.4],
          [28.2, 30.1, 29.7]],
@@ -52,4 +60,4 @@ if __name__ == "__main__":
         name="sst",
         attrs={"units": "°C"}
     )
-    inspect_dataset(sample_data)
+inspect_dataset(sample_data)
